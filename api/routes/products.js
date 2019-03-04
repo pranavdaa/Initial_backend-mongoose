@@ -7,8 +7,21 @@ router.get('/',(req,res,next) => {
 Product.find() //We can also use remove ,update,or other tags based on Mongoose library
 .exec() //this can be limit or query also based on the what we want as per the Mongoose library
 .then(docs => {
-  console.log(docs);
-  res.status(200).json(docs);
+  const response = {
+    count: docs.length,
+    products:docs.map(doc => {
+//to make a disciptive api
+      return {
+        name: doc.name,
+        price: doc.price,
+        _id: doc._id,
+        request: {
+          type: 'GET',
+          url: 'http://localhost:300/products/'+ doc._id
+        }
+      }
+    })
+  }
 })
 .catch(err =>{
   console.log(err);
